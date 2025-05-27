@@ -1,18 +1,19 @@
 import netmiko
 from netmiko import ConnectHandler
-from classes import IpInterfaces
+from classes import RunConfig
+import tomllib
+from pprint import pprint
 
-router = {
-    'device_type': 'mikrotik_routeros',
-    'host': '192.168.3.129',
-    'port': '22',
-    'username': 'netmiko+ct',
-    'password': 'netmiko'
-}
+
+# Load creds
+with open('config.toml', 'rb') as conf:
+    router = tomllib.load(conf)
 
 ssh = ConnectHandler(**router)
 
-out = ssh.send_command('/ip address print')
+runconf = RunConfig(ssh)
 
-print(out)
+print(runconf.resources)
 
+for i in runconf.routes:
+    print(i)
