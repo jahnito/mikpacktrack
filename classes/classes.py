@@ -6,7 +6,7 @@ class RunConfig:
     def __init__(self, ssh: BaseConnection):
         self.ssh = ssh
         self.resources = self.get_resources()
-        self.ipintf = self.get_ipintf()
+        # self.ipintf = self.get_ipintf()
         self.routes = self.get_routes()
 
     def get_resources(self):
@@ -16,12 +16,12 @@ class RunConfig:
             result = fsm.ParseText(output)
             return dict(zip(fsm.header, *result))
 
-    def get_ipintf(self):
-        output = self.ssh.send_command('/ip address print where disabled=no')
-        with open('templates/mikrotik_routeros_ip_address_print.textfsm') as tpl:
-            fsm = textfsm.TextFSM(tpl)
-            result = fsm.ParseText(output)
-            return result
+    # def get_ipintf(self):
+    #     output = self.ssh.send_command('/ip address print where disabled=no')
+    #     with open('templates/mikrotik_routeros_ip_address_print.textfsm') as tpl:
+    #         fsm = textfsm.TextFSM(tpl)
+    #         result = fsm.ParseText(output)
+    #         return result
 
     def get_routes(self):
         output = self.ssh.send_command('/ip route print terse without-paging')
@@ -39,3 +39,16 @@ class RunConfig:
                 result = fsm.ParseText(output)
                 result.insert(0, fsm.header)
                 return result
+
+
+class RawConfig:
+    def __init__(self, ssh: BaseConnection):
+        self.ssh = ssh
+        self.resources = self.get_resources()
+        self.routes = self.get_routes()
+
+    def get_resources(self):
+        return self.ssh.send_command('/system resource print without-paging')
+
+    def get_routes(self):
+        return self.ssh.send_command('/ip route print terse without-paging')

@@ -1,6 +1,5 @@
-import netmiko
 from netmiko import ConnectHandler
-from classes import RunConfig
+from classes import RunConfig, RawConfig
 import tomllib
 from pprint import pprint
 
@@ -13,7 +12,15 @@ ssh = ConnectHandler(**router)
 
 runconf = RunConfig(ssh)
 
-print(runconf.resources)
+# print(runconf.resources)
+# print(runconf.routes)
 
 for i in runconf.routes:
     print(i)
+
+# rawconf = RawConfig(ssh)
+
+# print(rawconf.resources)
+
+
+# print(rawconf.routes)
